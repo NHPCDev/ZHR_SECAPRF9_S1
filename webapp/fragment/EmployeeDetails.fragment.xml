@@ -1,0 +1,22 @@
+<c:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:c="sap.ui.core"
+    xmlns:f="sap.ui.layout.form"
+    class="sapUiSizeCompact">
+    <f:SimpleForm
+        editable="true"
+        layout="ColumnLayout">
+        <Label text="{i18n>employeeIdLabel}" />
+        <Input value="{viewModel>/formDetails/EmployeeId}" editable="false" />
+        <Label text="{i18n>employeeNameLabel}" />
+        <Input value="{viewModel>/formDetails/EmployeeName}" editable="false" />
+        <Label text="{i18n>companyCodeLabel}" />
+        <Input value="{viewModel>/formDetails/EmployeeGrade}" editable="false" />
+        <Label text="{i18n>personalSubAreaDescLabel}" />
+        <Input value="{viewModel>/formDetails/PersonnelSubAreaText}" editable="false" />
+        <Label text="{i18n>departmentLabel}" />
+        <Input value="{viewModel>/formDetails/EmployeeDepartment}" editable="false" />
+        <Label text="{i18n>positionLabel}" />
+        <Input value="{viewModel>/formDetails/PositionText}" editable="false" />
+    </f:SimpleForm>
+</c:FragmentDefinition>

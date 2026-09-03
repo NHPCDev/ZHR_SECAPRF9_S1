@@ -1,0 +1,196 @@
+<mvc:View
+    controllerName="com.nhpc.zhrsecaprf9s1.controller.Dashboard"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+    xmlns:table="sap.ui.table"
+    xmlns:f="sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+    class="sapUiSizeCompact"
+>
+    <f:DynamicPage
+        id="_IDGenDynamicPage1"
+        headerExpanded="true"
+        showFooter="true"
+    >
+        <f:header>
+            <f:DynamicPageHeader id="_IDGenDynamicPageHeader1">
+                <f:content>
+                    <fb:FilterBar
+                        id="filterbar"
+                        persistencyKey="myPersKey"
+                        useToolbar="false"
+                        search=".onSearchBtn"
+                    >
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
+                                id="_IDGenFilterGroupItem1"
+                                name="Serial Number"
+                                label="{i18n>sno}"
+                                groupName="Group1"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <Input
+                                        id="empID"
+                                        value="{viewModel>/filterData/Sno}"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
+                                id="_IDGenFilterGroupItem2"
+                                name="ConfirmedOn"
+                                label="{i18n>confirmedOn}"
+                                groupName="Group1"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <DatePicker
+                                        id="idConfirmedOn"
+                                        value="{viewModel>/filterData/ConfirmedOn}"
+                                        displayFormat="dd.MM.yyyy"
+                                        valueFormat="yyyyMMdd"
+                                        change="onDateChange"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
+                                id="_IDGenFilterGroupItem11"
+                                name="EmployeeNumber"
+                                label="{i18n>employeeID}"
+                                groupName="Group1"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <Input
+                                        id="EmployeeNumber"
+                                        value="{viewModel>/filterData/Pernr}"
+                                        showValueHelp="true"
+                                        valueHelpRequest=".onValueHelpRequest"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox id="_IDGenVBox1" class="sapUiSmallMargin">
+                <Table
+                    id="idDashboardTable"
+                    items="{
+                        path: '/Form9headSet',
+                        parameters: {
+                            expand: 'Form9HeadToSelf,Form9HeadToRelatives'
+                        },
+                        filters: [
+                        {
+                            path: 'ApproverFlag',
+                            operator: 'EQ',
+                            value1:'9'   
+                        },
+                        {
+                            path:'FormNo',
+                            operator:'EQ',
+                            value1:'FORM9'
+                        }
+                        ]
+                    }"
+                    growing="true"
+                    growingThreshold="20"
+                    width="100%"
+                    mode="None"
+                    autoPopinMode="true"
+                    alternateRowColors="true"
+                    sticky="ColumnHeaders,HeaderToolbar,InfoToolbar"
+                    updateFinished="onDashboardTableUpdateFinish"
+                >
+                    <headerToolbar>
+                        <OverflowToolbar>
+                            <Title
+                                id="dashBoardTitle"
+                                text="{= ${i18n>dashboardTableTitle} + ' (' + ${viewModel>/dashboardCount} + ')' }"
+                            />
+                            <ToolbarSpacer />
+                            <Button
+                                text="{i18n>downloadReportBtnText}"
+                                press="onDownload"
+                                type="Reject"
+                                icon="sap-icon://excel-attachment"
+                            />
+                        </OverflowToolbar>
+                    </headerToolbar>
+                    <columns>
+                        <Column>
+                            <Text text="{i18n>sno}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>employeeID}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>createdOn}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>confirmedOn}" />
+                        </Column>
+
+                        <Column>
+                            <Text text="{i18n>confirmedBy}" />
+                        </Column>
+
+                        <Column>
+                            <Text text="{i18n>status}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>delayedStatus}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>contraStatus}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem
+                            type="Navigation"
+                            press="onListItemPress"
+                        >
+                            <cells>
+                            <ObjectIdentifier title="{Sno}"/>
+                                <ObjectIdentifier title="{Pernr}" text="{EmployeeName}"/>
+                                <Text
+                                    text="{
+                                    path: 'CreatedOn',
+                                    formatter: '.formatter.formatDate'
+                                }"/>
+                                <Text
+                                    text="{
+                                        path: 'ConfirmedOn',
+                                        type: 'sap.ui.model.type.Date',
+                                        formatOptions: {
+                                            source: {
+                                                pattern: 'dd.MM.yyyy'
+                                            },
+                                            pattern: 'dd.MM.yyyy'
+                                        }
+                                }"
+                                />
+                                <ObjectIdentifier title="{Pernr}" text="{EmployeeName}"/>
+                                <ObjectStatus
+                                    text="{path:'Status', formatter:'.formatter.formatTitleCase'}"
+                                    class="sapMObjectStatusMedium statusBoldText"
+                                    state="{path:'Status',formatter:'.formatter.formatStatusState'}"
+                                />
+                                <Text text="{Delayed}"></Text>
+                                <Text text="{Contra}"></Text>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>

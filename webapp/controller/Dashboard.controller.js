@@ -14,11 +14,11 @@ sap.ui.define([
     "sap/m/Label",
     "sap/m/Column",
     "sap/m/Text"
-], (BaseController, Filter, FilterOperator, Spreadsheet, Fragment, ValueState, formatter, messenger,BusyIndicator, JSONModel, SearchField, UIColumn, Label, MColumn, Text) => {
+], (BaseController, Filter, FilterOperator, Spreadsheet, Fragment, ValueState, formatter, messenger, BusyIndicator, JSONModel, SearchField, UIColumn, Label, MColumn, Text) => {
     "use strict";
 
     return BaseController.extend("com.nhpc.zhrsecaprf9s1.controller.Dashboard", {
-        formatter:formatter,
+        formatter: formatter,
         onInit() {
             this.getRouter().getRoute("RouteDashboard").attachPatternMatched(this._onRoutePatternMatched, this);
         },
@@ -39,13 +39,13 @@ sap.ui.define([
             var sTitle = oResourceBundle.getText("dashboardTableTitle") + " (" + iCount + ")";
             this.byId("dashBoardTitle").setText(sTitle);
         },
-        onCreate:function(){
-            this.getRouter().navTo("RouteDetail",{
-                Sno:"New",
-                Pernr:"New"
+        onCreate: function () {
+            this.getRouter().navTo("RouteDetail", {
+                Sno: "New",
+                Pernr: "New"
             });
         },
-        onListItemPress:async function (oEvent) {
+        onListItemPress: async function (oEvent) {
             // await this.resetModel();
             var oObject = oEvent.getSource()
                 .getBindingContext()
@@ -107,41 +107,63 @@ sap.ui.define([
                 aFilters: aSearchFilter.length
                     ? [new Filter({
                         filters: aSearchFilter,
-                            and: true
-                     })]
-                : []
+                        and: true
+                    })]
+                    : []
             }
         },
         onDownload: function () {
-            var oTable = this.byId("idDashboardTable");
-            var oBinding = oTable.getBinding("items");
-            var aData = oBinding.getContexts().map(function (oContext) {
-                var oData = Object.assign({}, oContext.getObject());
-                oData.CreatedOn = formatter.formatDate(oData.CreatedOn);
-                oData.ConfirmedOn = formatter.formatDate(oData.ConfirmedOn);
-                return oData;
-            });
-            var aCols = this.createColumnConfig();
-            var oSettings = {
-                workbook: {
-                    columns: aCols
+            var oModel = this.getModel();
+            let oResourceBundle = this.getResourceBundle();
+            var aFilters = [
+                new sap.ui.model.Filter(
+                    "ApproverFlag",
+                    sap.ui.model.FilterOperator.EQ,
+                    "9"
+                ),
+                new sap.ui.model.Filter(
+                    "FormNo",
+                    sap.ui.model.FilterOperator.EQ,
+                    "FORM9"
+                )
+            ];
+            BusyIndicator.show(0);
+            oModel.read("/Form9headSet", {
+                filters: aFilters,
+                urlParameters: {
+                    "$expand": "Form9HeadToSelf,Form9HeadToRelatives"
                 },
-                dataSource: aData,
-                fileType: "xlsx",
-                fileName: this.getResourceBundle().getText("title")
-            };
-            var oSheet = new Spreadsheet(oSettings);
-            oSheet.build()
-                .finally(function () {
-                    oSheet.destroy();
-                });
+                success: function (oData) {
+                    var aData = oData.results.map(function (oData) {
+                        var oRow = Object.assign({}, oData);
+                        oRow.CreatedOn = formatter.formatDate(oRow.CreatedOn);
+                        oRow.ConfirmedOn = formatter.formatDate(oRow.ConfirmedOn);
+                        return oRow;
+                    });
+                    var aCols = this.createColumnConfig();
+                    var oSettings = {
+                        workbook: {
+                            columns: aCols
+                        },
+                        dataSource: aData,
+                        fileType: "xlsx",
+                        fileName: this.getResourceBundle().getText("title")
+                    };
+                    var oSheet = new Spreadsheet(oSettings);
+                    oSheet.build()
+                        .finally(function () {
+                            oSheet.destroy();
+                            BusyIndicator.hide();
+                        });
+                }.bind(this),
+                error: function () {
+                    BusyIndicator.hide();
+                    messenger.error(oResourceBundle.getText("failedToDownloadData"));
+                }
+            });
         },
         createColumnConfig: function () {
             var aCols = [];
-            aCols.push({
-                label: this.getResourceBundle().getText("sno"),
-                property: "Sno"
-            });
             aCols.push({
                 label: this.getResourceBundle().getText("employeeID"),
                 property: "Pernr"
@@ -154,9 +176,13 @@ sap.ui.define([
                 label: this.getResourceBundle().getText("createdOn"),
                 property: "CreatedOn"
             });
-             aCols.push({
+            aCols.push({
                 label: this.getResourceBundle().getText("confirmedOn"),
                 property: "ConfirmedOn"
+            });
+            aCols.push({
+                label: this.getResourceBundle().getText("ConfirmedByPernr"),
+                property: "Pernr"
             });
             aCols.push({
                 label: this.getResourceBundle().getText("confirmedBy"),
@@ -361,9 +387,9 @@ sap.ui.define([
             });
         },
         onValueHelpChange: function (oEvent) {
-             var sEmpId = oEvent.getParameter("value");
+            var sEmpId = oEvent.getParameter("value");
             var oInput = oEvent.getSource();
-             if (!sEmpId) {
+            if (!sEmpId) {
                 this.getModel("filterModel").setProperty("/EmpId", "");
                 return;
             }
@@ -380,7 +406,7 @@ sap.ui.define([
                         sEmpId
                     )
                 ],
-                success: function (oData) { 
+                success: function (oData) {
                     if (oData.results.length > 0) {
                         this.getModel("viewModel")
                             .setProperty("/filterData/Pernr", oData.results[0].Empid);

@@ -6,6 +6,7 @@
     xmlns:table="sap.ui.table"
     xmlns:f="sap.f"
     xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
     class="sapUiSizeCompact"
 >
     <f:DynamicPage
@@ -22,22 +23,6 @@
                         useToolbar="false"
                         search=".onSearchBtn"
                     >
-                        <fb:filterGroupItems>
-                            <fb:FilterGroupItem
-                                id="_IDGenFilterGroupItem1"
-                                name="Serial Number"
-                                label="{i18n>sno}"
-                                groupName="Group1"
-                                visibleInFilterBar="true"
-                            >
-                                <fb:control>
-                                    <Input
-                                        id="empID"
-                                        value="{viewModel>/filterData/Sno}"
-                                    />
-                                </fb:control>
-                            </fb:FilterGroupItem>
-                        </fb:filterGroupItems>
                         <fb:filterGroupItems>
                             <fb:FilterGroupItem
                                 id="_IDGenFilterGroupItem2"
@@ -70,7 +55,9 @@
                                         id="EmployeeNumber"
                                         value="{viewModel>/filterData/Pernr}"
                                         showValueHelp="true"
-                                        valueHelpRequest=".onValueHelpRequest"
+                                        app:valuehelp="EmployeeNumber"
+                                        valueHelpRequest="onValueHelpRequest"
+                                        change="onValueHelpChange"
                                     />
                                 </fb:control>
                             </fb:FilterGroupItem>
@@ -98,6 +85,11 @@
                             path:'FormNo',
                             operator:'EQ',
                             value1:'FORM9'
+                        },
+                        {
+                            path:'Status',
+                            operator:'EQ',
+                            value1:'Confirmed'
                         }
                         ]
                     }"
@@ -126,9 +118,6 @@
                         </OverflowToolbar>
                     </headerToolbar>
                     <columns>
-                        <Column>
-                            <Text text="{i18n>sno}" />
-                        </Column>
                         <Column>
                             <Text text="{i18n>employeeID}" />
                         </Column>
@@ -159,7 +148,6 @@
                             press="onListItemPress"
                         >
                             <cells>
-                            <ObjectIdentifier title="{Sno}"/>
                                 <ObjectIdentifier title="{Pernr}" text="{EmployeeName}"/>
                                 <Text
                                     text="{

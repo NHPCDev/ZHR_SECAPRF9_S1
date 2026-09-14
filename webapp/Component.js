@@ -4,7 +4,7 @@ sap.ui.define([
     "com/nhpc/zhrsecaprf9s1/utils/messenger",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-], (UIComponent, models,messenger,Filter,FilterOperator) => {
+], (UIComponent, models, messenger, Filter, FilterOperator) => {
     "use strict";
 
     return UIComponent.extend("com.nhpc.zhrsecaprf9s1.Component", {
@@ -15,13 +15,13 @@ sap.ui.define([
             ]
         },
 
-        init:async function() {
+        init: async function () {
             // call the base component's init function
             UIComponent.prototype.init.apply(this, arguments);
 
             // set the device model
             this.setModel(models.createDeviceModel(), "device");
-            this.setModel(models.createViewModel(),"viewModel");
+            this.setModel(models.createViewModel(), "viewModel");
             const oViewModel = this.getModel("viewModel");
             const oToday = new Date();
             const sToday = String(oToday.getDate()).padStart(2, "0") + "." +
@@ -40,15 +40,13 @@ sap.ui.define([
             }
             oToday.setHours(0, 0, 0, 0);
             oViewModel.setProperty("/financialYearStart", oFinancialYearStart);
-            oViewModel.setProperty("/financialYearEnd", oToday);
-
-            await this._checkEligibility();
-
+            oViewModel.setProperty("/financialYearEnd", oToday);          
             // enable routing
             this.getRouter().initialize();
+            await this._checkEligibility();
             messenger.init(this);
         },
-        _checkEligibility:async function () {
+        _checkEligibility: async function () {
             var oModel = this.getModel();
             var aFilters = [
                 new Filter("ApprovalFlag", FilterOperator.EQ, "9")
@@ -57,16 +55,13 @@ sap.ui.define([
                 filters: aFilters,
                 success: function (oResponse) {
                     if (oResponse.results && oResponse.results.length > 0 && oResponse.results[0].AuthResponse === "No") {
-                        this.getRouter().initialize();
-                        this.getRouter().navTo("RouteErrorPage");
- 
+                        this.getRouter().navTo("RouteErrorPage", {}, true);
                     }
                 }.bind(this),
-                 error: function () {
-                     this.getRouter().initialize();
-                 }.bind(this)
+                error: function () {
+                }.bind(this)
             });
- 
+
         }
     });
 });

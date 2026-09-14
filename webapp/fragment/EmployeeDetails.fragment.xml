@@ -28,6 +28,8 @@
         <Input value="{viewModel>/formDetails/PositionText}" editable="false" /> -->
         <Label text="{i18n>userID}"></Label>
         <Input value="{viewModel>/formDetails/USRID}" editable="false"></Input>
+        <Label text="{i18n>userID}"></Label>
+        <Input value="{viewModel>/formDetails/USRID}" editable="false"></Input>
         <Label text="{i18n>mobile}"></Label>
         <Input value="{viewModel>/formDetails/MOBILE}" editable="false"></Input>
         <Label text="{i18n>email}"></Label>

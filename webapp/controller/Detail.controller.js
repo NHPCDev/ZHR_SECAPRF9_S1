@@ -134,6 +134,7 @@ sap.ui.define([
                         oViewModel.setProperty("/TransactionRelatives", oData.results[0].Form9HeadToRelatives.results);
                         oViewModel.setProperty("/formDetails/Status", oData.results[0].Status);
                         oViewModel.setProperty("/formDetails/UndertakingText", oData.results[0].UndertakingText);
+                        oViewModel.setProperty("/formDetails/Designation", oData.results[0].Designation);
                         resolve();
                     },
                     error: function (oError) {

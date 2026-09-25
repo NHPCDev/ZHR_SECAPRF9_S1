@@ -40,7 +40,7 @@ sap.ui.define([
             }
             oToday.setHours(0, 0, 0, 0);
             oViewModel.setProperty("/financialYearStart", oFinancialYearStart);
-            oViewModel.setProperty("/financialYearEnd", oToday);          
+            oViewModel.setProperty("/financialYearEnd", oToday);
             // enable routing
             this.getRouter().initialize();
             await this._checkEligibility();

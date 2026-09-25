@@ -13,10 +13,11 @@ sap.ui.define([
     "sap/ui/table/Column",
     "sap/m/Label",
     "sap/m/Column",
-    "sap/m/Text"
-], (BaseController, Filter, FilterOperator, Spreadsheet, Fragment, ValueState, formatter, messenger, BusyIndicator, JSONModel, SearchField, UIColumn, Label, MColumn, Text) => {
+    "sap/m/Text",
+    "sap/ui/export/library"
+], (BaseController, Filter, FilterOperator, Spreadsheet, Fragment, ValueState, formatter, messenger, BusyIndicator, JSONModel, SearchField, UIColumn, Label, MColumn, Text,exportLibrary) => {
     "use strict";
-
+    var EdmType = exportLibrary.EdmType;
     return BaseController.extend("com.nhpc.zhrsecaprf9s1.controller.Dashboard", {
         formatter: formatter,
         onInit() {
@@ -113,54 +114,22 @@ sap.ui.define([
             }
         },
         onDownload: function () {
-            var oModel = this.getModel();
-            let oResourceBundle = this.getResourceBundle();
-            var aFilters = [
-                new sap.ui.model.Filter(
-                    "ApproverFlag",
-                    sap.ui.model.FilterOperator.EQ,
-                    "9"
-                ),
-                new sap.ui.model.Filter(
-                    "FormNo",
-                    sap.ui.model.FilterOperator.EQ,
-                    "FORM9"
-                )
-            ];
-            BusyIndicator.show(0);
-            oModel.read("/Form9headSet", {
-                filters: aFilters,
-                urlParameters: {
-                    "$expand": "Form9HeadToSelf,Form9HeadToRelatives"
+            var oTable = this.byId("idDashboardTable");
+            var oBinding = oTable.getBinding("items");
+            var aCols = this.createColumnConfig();
+            var oSettings = {
+                workbook: {
+                    columns: aCols
                 },
-                success: function (oData) {
-                    var aData = oData.results.map(function (oData) {
-                        var oRow = Object.assign({}, oData);
-                        oRow.CreatedOn = formatter.formatDate(oRow.CreatedOn);
-                        oRow.ConfirmedOn = formatter.formatDate(oRow.ConfirmedOn);
-                        return oRow;
-                    });
-                    var aCols = this.createColumnConfig();
-                    var oSettings = {
-                        workbook: {
-                            columns: aCols
-                        },
-                        dataSource: aData,
-                        fileType: "xlsx",
-                        fileName: this.getResourceBundle().getText("title")
-                    };
-                    var oSheet = new Spreadsheet(oSettings);
-                    oSheet.build()
-                        .finally(function () {
-                            oSheet.destroy();
-                            BusyIndicator.hide();
-                        });
-                }.bind(this),
-                error: function () {
-                    BusyIndicator.hide();
-                    messenger.error(oResourceBundle.getText("failedToDownloadData"));
-                }
-            });
+                dataSource: oBinding,
+                fileType: "xlsx",
+                fileName: this.getResourceBundle().getText("title")
+            };
+            var oSheet = new Spreadsheet(oSettings);
+            oSheet.build()
+                .finally(function () {
+                    oSheet.destroy();
+                });
         },
         createColumnConfig: function () {
             var aCols = [];
@@ -174,23 +143,17 @@ sap.ui.define([
             });
             aCols.push({
                 label: this.getResourceBundle().getText("createdOn"),
-                property: "CreatedOn"
+                property: "CreatedOn",
+                type: EdmType.Date,
+                inputFormat: "yyyymmdd",
+                format: "dd.mm.yyyy"
             });
             aCols.push({
                 label: this.getResourceBundle().getText("confirmedOn"),
-                property: "ConfirmedOn"
-            });
-            aCols.push({
-                label: this.getResourceBundle().getText("ConfirmedByPernr"),
-                property: "Pernr"
-            });
-            aCols.push({
-                label: this.getResourceBundle().getText("confirmedBy"),
-                property: "EmployeeName"
-            });
-            aCols.push({
-                label: this.getResourceBundle().getText("status"),
-                property: "Status"
+                property: "ConfirmedOn",
+                type: EdmType.Date,
+                inputFormat: "yyyymmdd",
+                format: "dd.mm.yyyy"
             });
             aCols.push({
                 label: this.getResourceBundle().getText("delayedStatus"),
@@ -199,6 +162,10 @@ sap.ui.define([
             aCols.push({
                 label: this.getResourceBundle().getText("contraStatus"),
                 property: "Contra"
+            });
+            aCols.push({
+                label: this.getResourceBundle().getText("status"),
+                property: "Status"
             });
             return aCols;
         },

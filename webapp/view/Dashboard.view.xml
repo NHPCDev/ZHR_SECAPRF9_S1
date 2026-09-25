@@ -25,6 +25,22 @@
                     >
                         <fb:filterGroupItems>
                             <fb:FilterGroupItem
+                                id="_IDGenFilterGroupItem1"
+                                name="Serial Number"
+                                label="{i18n>sno}"
+                                groupName="Group1"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <Input
+                                        id="empID"
+                                        value="{viewModel>/filterData/Sno}"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
                                 id="_IDGenFilterGroupItem2"
                                 name="ConfirmedOn"
                                 label="{i18n>confirmedOn}"
@@ -67,7 +83,10 @@
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
-            <VBox id="_IDGenVBox1" class="sapUiSmallMargin">
+            <VBox
+                id="_IDGenVBox1"
+                class="sapUiSmallMargin"
+            >
                 <Table
                     id="idDashboardTable"
                     items="{
@@ -119,6 +138,9 @@
                     </headerToolbar>
                     <columns>
                         <Column>
+                            <Text text="{i18n>sno}" />
+                        </Column>
+                        <Column>
                             <Text text="{i18n>employeeID}" />
                         </Column>
                         <Column>
@@ -127,19 +149,14 @@
                         <Column>
                             <Text text="{i18n>confirmedOn}" />
                         </Column>
-
-                        <Column>
-                            <Text text="{i18n>confirmedBy}" />
-                        </Column>
-
-                        <Column>
-                            <Text text="{i18n>status}" />
-                        </Column>
                         <Column>
                             <Text text="{i18n>delayedStatus}" />
                         </Column>
                         <Column>
                             <Text text="{i18n>contraStatus}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>status}" />
                         </Column>
                     </columns>
                     <items>
@@ -148,12 +165,17 @@
                             press="onListItemPress"
                         >
                             <cells>
-                                <ObjectIdentifier title="{Pernr}" text="{EmployeeName}"/>
+                                <ObjectIdentifier title="{Sno}" />
+                                <ObjectIdentifier
+                                    title="{Pernr}"
+                                    text="{EmployeeName}"
+                                />
                                 <Text
                                     text="{
                                     path: 'CreatedOn',
                                     formatter: '.formatter.formatDate'
-                                }"/>
+                                }"
+                                />
                                 <Text
                                     text="{
                                         path: 'ConfirmedOn',
@@ -166,14 +188,13 @@
                                         }
                                 }"
                                 />
-                                <ObjectIdentifier title="{Pernr}" text="{EmployeeName}"/>
+                                <Text text="{Delayed}" />
+                                <Text text="{Contra}" />
                                 <ObjectStatus
                                     text="{path:'Status', formatter:'.formatter.formatTitleCase'}"
                                     class="sapMObjectStatusMedium statusBoldText"
                                     state="{path:'Status',formatter:'.formatter.formatStatusState'}"
                                 />
-                                <Text text="{Delayed}"></Text>
-                                <Text text="{Contra}"></Text>
                             </cells>
                         </ColumnListItem>
                     </items>

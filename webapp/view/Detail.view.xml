@@ -135,7 +135,7 @@
                             <uxap:ObjectPageSection
                                 title="{i18n>historyRemarks}"
                                 titleUppercase="false"
-                                visible ="{= ${viewModel>/formDetails/Status} === 'Returned' || ${viewModel>/formDetails/Status} === 'Confirmed'}"
+                                visible ="{= ${viewModel>/formDetails/Status} === 'Returned' || ${viewModel>/formDetails/Status} === 'Confirmed' || ${viewModel>/formDetails/Status} === 'Approved'}"
                             >
                                 <uxap:subSections>
                                     <uxap:ObjectPageSubSection>

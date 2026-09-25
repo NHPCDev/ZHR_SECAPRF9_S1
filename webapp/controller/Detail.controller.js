@@ -816,14 +816,30 @@ sap.ui.define([
         },
         onDecisionSubmit: function (oEvent) {
             const sDecision = this.getModel("viewModel").getProperty("/decision");
-            const fnHandler = sDecision === "Approve"
-                ? this.onDecisionSubmitApprove
-                : this.onDecisionSubmitReturn;
-
-            fnHandler.call(this, oEvent);
+            let oModel = this.getModel();
+            BusyIndicator.show(0);
+            let oResourceBundle = this.getResourceBundle();
+            this.sActionFlag = sDecision === "Approve" ? "Approved" : "Returned";
+            const sMessageKey = sDecision === "Approve" ? "FinalApproveMsg" : "FinalReturnMsg";
+            let oPayload = this.createRequestPayload();
+            oModel.create("/Form9headSet", oPayload, {
+                success: function (oResp) {
+                    BusyIndicator.hide();
+                    this._oRemarksDialog.close();
+                    messenger.success(oResourceBundle.getText(sMessageKey, oResp.Sno), () => {
+                        this.getRouter().navTo("RouteDashboard", {}, {}, true);
+                    });
+                }.bind(this),
+                error: function (oError) {
+                    BusyIndicator.hide();
+                    messenger.error(JSON.parse(oError.responseText).error.message.value);
+                }.bind(this)
+            });
         },
         handleReturnBtnPress: async function () {
             this.getModel("viewModel").setProperty("/decision","Return");
+            let oViewModel = this.getModel("viewModel");
+            oViewModel.setProperty("/submitEnabled", "false");
             if (!this._oRemarksDialog) {
                 this._oRemarksDialog = await sap.ui.core.Fragment.load({
                     id: this.getView().getId(),
@@ -838,6 +854,8 @@ sap.ui.define([
         },
         handleApproveBtnPress: async function () {
             this.getModel("viewModel").setProperty("/decision","Approve");
+            let oViewModel = this.getModel("viewModel");
+            oViewModel.setProperty("/submitEnabled", "true");
             if (!this._oRemarksDialog) {
                 this._oRemarksDialog = await sap.ui.core.Fragment.load({
                     id: this.getView().getId(),
@@ -866,6 +884,18 @@ sap.ui.define([
         },
         onForm9PreviewCancel: function(){
             this.oPreviewDialog.close();
+        },
+        onRemarksChange: function (oEvent) {
+            let oControl = oEvent.getSource();
+            let sValue = oControl.getValue();
+            let oViewModel = this.getModel("viewModel");
+            if (!sValue) {
+                oViewModel.setProperty("/submitEnabled", "false");
+            } else {
+                oControl.setValueState("None");
+                oControl.setValueStateText("");
+                oViewModel.setProperty("/submitEnabled", "true");
+            }
         }
     });
 });

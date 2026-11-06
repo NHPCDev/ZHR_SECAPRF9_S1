@@ -17,27 +17,27 @@
                 icon="sap-icon://add"
                 type="Accept"
                 press="onAddTransactionHoldingDetails"
-                visible="{= ${viewModel>/formDetails/Status} === 'New' || ${viewModel>/formDetails/Status} === 'Draft' || ${viewModel>/formDetails/Status} === 'Returned'}"
+                visible="false"
             />
             <Button
                 text="{i18n>deleteBtnText}"
                 icon="sap-icon://delete"
                 type="Reject"
                 press="onDeleteTransactionHoldingDetails"
-                visible="{= ${viewModel>/formDetails/Status} === 'New' || ${viewModel>/formDetails/Status} === 'Draft' || ${viewModel>/formDetails/Status} === 'Returned'}"
+                visible="false"
             />
             <Button
                 text="{i18n>editBtnText}"
                 icon="sap-icon://edit"
                 type="Emphasized"
                 press="onEditTransactionHoldingDetails"
-                visible="{= ${viewModel>/formDetails/Status} === 'New' || ${viewModel>/formDetails/Status} === 'Draft' || ${viewModel>/formDetails/Status} === 'Returned'}"
+                visible="false"
             />
         </Toolbar>
         <table:Table
             id="idTransactionHoldingTable"
             rows="{viewModel>/TransactionHolding}"
-            selectionMode="{= ${viewModel>/formDetails/Status} !== 'Approved' &amp;&amp; ${viewModel>/formDetails/Status} !== 'Confirmed' ? 'Single' : 'None'}"
+            selectionMode="None"
             selectionBehavior="Row"
             alternateRowColors="true"
             width="100%"
@@ -106,13 +106,17 @@
                 <table:Column width="220px">
                     <Text text="{i18n>SecuritypurchasedConsideration}" />
                     <table:template>
-                        <Text text="{viewModel>Securitypurchasedconso}" />
+                    <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
+                        <Text text="{path:'viewModel>Securitypurchasedconso',formatter:'.formatter.formatAmountToINR'}" />
+                        <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                     </table:template>
                 </table:Column>
                 <table:Column width="220px">
                     <Text text="{i18n>SecuritysoldConsideration}" />
                     <table:template>
-                        <Text text="{viewModel>Securitysoldconso}" />
+                    <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
+                        <Text text="{path:'viewModel>Securitysoldconso',formatter:'.formatter.formatAmountToINR'}" />
+                        <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                     </table:template>
                 </table:Column>
                 <table:Column width="150px">

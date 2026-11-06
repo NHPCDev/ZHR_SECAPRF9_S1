@@ -17,9 +17,9 @@ sap.ui.define(["sap/ui/core/IconPool",
                 });
             }
             if (status) {
-                if (status === "02" || status === "Submitted" || status === "Approved" || status === "Confirmed" || status === "Confirm") {
+                if (status === "02" || status === "Submitted" || status === "Approved") {
                     return "Success";
-                } else if (status === "New") {
+                } else if (status === "New" || status === "Confirmed") {
                     return "Information";
                 } else if (status === "01" || status === "Pending") {
                     return "Warning";
@@ -163,7 +163,8 @@ sap.ui.define(["sap/ui/core/IconPool",
 
             return oCurrencyFormat.format(parseFloat(sValue), "INR");
         },
-        formatName: function (sName, sFrom, sTo) {
+        //Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
+        formatName: function (sFrom, sTo, sHeaderText) {
             function formatDate(sDate) {
                 if (sDate) {
                     if (sDate.length === 8) {
@@ -179,7 +180,8 @@ sap.ui.define(["sap/ui/core/IconPool",
             }
             sFrom = formatDate(sFrom);
             sTo = formatDate(sTo);
-            return "I, " + (sName || "-") + " Designated Person of NHPC Ltd. furnish below the details of transactions of my own/ Immediate relatives in the Securities of NHPC Ltd. during the period from " + (sFrom || "-") + " to " + (sTo || "-") + " in terms of clause 9.1 of the Code of Conduct to regulate, monitor and report trading by insider in trading with Securities and Code of Fair Disclosure Practices for Prevention of Insider Trading of NHPC";
+            return sHeaderText.replace("&FROMDATE&",sFrom).replace("&TODATE&",sTo);
         }
+        //End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
     }
 });

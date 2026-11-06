@@ -20,17 +20,19 @@
                     textAlign="Center"
                     class="sapUiSmallMargin blueTitle"
                 />
+                <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                 <FormattedText
                     htmlText="{
         parts: [
-            { path: 'viewModel>/formDetails/EmployeeName' },
             { path: 'viewModel>/formDetails/Fromdate' },
-            { path: 'viewModel>/formDetails/Todate' }
+            { path: 'viewModel>/formDetails/Todate' },
+            {path:'viewModel>/formDetails/HeaderText'}
         ],
         formatter: '.formatter.formatName'
     }"
                     class="sapUiSmallMargin"
                 />
+                <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                 <form:SimpleForm
                     class="sapUiSmallMargin"
                 >
@@ -65,7 +67,7 @@
                     xmlns:table="sap.ui.table"
                     xmlns:rowmodes="sap.ui.table.rowmodes"
                     rows="{viewModel>/TransactionHolding}"
-                    selectionMode="{= ${viewModel>/formDetails/Status} !== 'Approved' &amp;&amp; ${viewModel>/formDetails/Status} !== 'Confirmed' ? 'Single' : 'None'}"
+                    selectionMode="None"
                     selectionBehavior="Row"
                     alternateRowColors="true"
                     width="100%"
@@ -137,15 +139,19 @@
                                 text="{i18n>SecuritypurchasedConsideration}"
                             />
                             <table:template>
+                            <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                                 <Text
-                                    text="{viewModel>Securitypurchasedconso}"
+                                    text="{path:'viewModel>Securitypurchasedconso',formatter:'.formatter.formatAmountToINR'}"
                                 />
+                                <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                             </table:template>
                         </table:Column>
                         <table:Column width="220px">
                             <Text text="{i18n>SecuritysoldConsideration}" />
                             <table:template>
-                                <Text text="{viewModel>Securitysoldconso}" />
+                            <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
+                                <Text text="{path:'viewModel>Securitysoldconso',formatter:'.formatter.formatAmountToINR'}" />
+                                <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                             </table:template>
                         </table:Column>
                         <table:Column width="150px">
@@ -166,7 +172,7 @@
                     xmlns:rowmodes="sap.ui.table.rowmodes"
                     rows="{viewModel>/TransactionRelatives}"
                     fixedColumnCount="1"
-                    selectionMode="{= ${viewModel>/formDetails/Status} !== 'Approved' &amp;&amp; ${viewModel>/formDetails/Status} !== 'Confirmed' ? 'Single' : 'None'}"
+                    selectionMode="None"
                     selectionBehavior="Row"
                     alternateRowColors="true"
                     width="100%"
@@ -255,15 +261,19 @@
                                 text="{i18n>SecuritypurchasedConsideration}"
                             />
                             <table:template>
+                            <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                                 <Text
-                                    text="{viewModel>Securitypurchasedconso}"
+                                    text="{path:'viewModel>Securitypurchasedconso',formatter:'.formatter.formatAmountToINR'}"
                                 />
+                                <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                             </table:template>
                         </table:Column>
                         <table:Column width="220px">
                             <Text text="{i18n>SecuritysoldConsideration}" />
                             <table:template>
-                                <Text text="{viewModel>Securitysoldconso}" />
+                            <!-- Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
+                                <Text text="{path:'viewModel>Securitysoldconso',formatter:'.formatter.formatAmountToINR'}" />
+                                <!-- End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change -->
                             </table:template>
                         </table:Column>
                         <table:Column width="150px">

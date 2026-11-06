@@ -104,11 +104,6 @@
                             path:'FormNo',
                             operator:'EQ',
                             value1:'FORM9'
-                        },
-                        {
-                            path:'Status',
-                            operator:'EQ',
-                            value1:'Confirmed'
                         }
                         ]
                     }"

@@ -134,7 +134,18 @@ sap.ui.define([
                         oViewModel.setProperty("/TransactionRelatives", oData.results[0].Form9HeadToRelatives.results);
                         oViewModel.setProperty("/formDetails/Status", oData.results[0].Status);
                         oViewModel.setProperty("/formDetails/UndertakingText", oData.results[0].UndertakingText);
+                        //Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
+                        oViewModel.setProperty("/formDetails/HeaderText", oData.results[0].HeaderText);
+                        //End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
                         oViewModel.setProperty("/formDetails/Designation", oData.results[0].Designation);
+                        //Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
+                        oViewModel.setProperty("/undertakingDocs", [
+                            {
+                                text: oData.results[0].UndertakingText || "",
+                                selected: oData.results[0].Undertakingflg === "X"
+                            }
+                        ]);
+                        //End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
                         resolve();
                     },
                     error: function (oError) {
@@ -744,7 +755,10 @@ sap.ui.define([
                 Todate: oFormDetails.Todate,
                 Delayed: oFormDetails.Delayed,
                 Contra: oFormDetails.Contra,
-                FormNo: "FORM9"
+                FormNo: "FORM9",
+                //Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
+                Undertakingflg: oViewModel.getProperty("/undertakingDocs/0/selected") === true ? "X" : ""
+                //End of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
             };
             let sNo = oViewModel.getProperty("/sNo");
             if (sNo) {

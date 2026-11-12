@@ -134,6 +134,10 @@ sap.ui.define([
         createColumnConfig: function () {
             var aCols = [];
             aCols.push({
+                label: this.getResourceBundle().getText("sno"),
+                property: "Sno"
+            });
+            aCols.push({
                 label: this.getResourceBundle().getText("employeeID"),
                 property: "Pernr"
             });
@@ -165,7 +169,7 @@ sap.ui.define([
             });
             aCols.push({
                 label: this.getResourceBundle().getText("status"),
-                property: "Status"
+                property: "StatusText"
             });
             return aCols;
         },

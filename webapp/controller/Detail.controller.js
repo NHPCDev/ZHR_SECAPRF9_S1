@@ -26,6 +26,7 @@ sap.ui.define([
             let oResourceBundle = this.getResourceBundle();
             if (sPernr === "New") {
                 oViewModel.setProperty("/formDetails/Status", "New");
+                oViewModel.setProperty("/formDetails/StatusText", "New");
                 oViewModel.setProperty("/TransactionHolding", []);
                 oViewModel.setProperty("/TransactionRelatives", []);
                 oViewModel.setProperty("/sNo", "");
@@ -133,6 +134,7 @@ sap.ui.define([
                         oViewModel.setProperty("/TransactionHolding", oData.results[0].Form9HeadToSelf.results);
                         oViewModel.setProperty("/TransactionRelatives", oData.results[0].Form9HeadToRelatives.results);
                         oViewModel.setProperty("/formDetails/Status", oData.results[0].Status);
+                        oViewModel.setProperty("/formDetails/StatusText", oData.results[0].StatusText);
                         oViewModel.setProperty("/formDetails/UndertakingText", oData.results[0].UndertakingText);
                         //Start of Change: 06.11.2026: Balamurugan : Declaration added and total value label change
                         oViewModel.setProperty("/formDetails/HeaderText", oData.results[0].HeaderText);
@@ -777,7 +779,7 @@ sap.ui.define([
             if (bProceed) {
                 messenger.confirm(sTitle, sText, "Confirm", null, function () {
                     BusyIndicator.show(0);
-                    this.sActionFlag = "Approved";
+                    this.sActionFlag = "03";
                     let oPayload = this.createRequestPayload();
                     oModel.create("/Form9headSet", oPayload, {
                         success: function (oResp) {
@@ -811,7 +813,7 @@ sap.ui.define([
             }
             messenger.confirm(sTitle, sText, "Confirm", null, function () {
                 BusyIndicator.show(0);
-                this.sActionFlag = "Returned";
+                this.sActionFlag = "04";
                 let oPayload = this.createRequestPayload();
                 oModel.create("/Form9headSet", oPayload, {
                     success: function (oResp) {
@@ -833,7 +835,7 @@ sap.ui.define([
             let oModel = this.getModel();
             BusyIndicator.show(0);
             let oResourceBundle = this.getResourceBundle();
-            this.sActionFlag = sDecision === "Approve" ? "Approved" : "Returned";
+            this.sActionFlag = sDecision === "Approve" ? "03" : "04";
             const sMessageKey = sDecision === "Approve" ? "FinalApproveMsg" : "FinalReturnMsg";
             let oPayload = this.createRequestPayload();
             oModel.create("/Form9headSet", oPayload, {
